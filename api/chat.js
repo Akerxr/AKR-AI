@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // التأكد من استلام البيانات بشكل صحيح
+    // قراءة البيانات المرسلة
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const { message, user } = body || {};
 
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'GROQ_API_KEY is missing in Vercel settings.' });
     }
 
-    // إرسال الطلب لـ Groq API
+    // إرسال الطلب لـ Groq API باستخدام الموديل المعتمد
     const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
+        model: 'llama3-8b-8192',
         messages: [
           {
             role: 'system',
