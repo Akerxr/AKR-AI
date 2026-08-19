@@ -1,11 +1,9 @@
 export default async function handler(req, res) {
-  // السماح بطلبات POST فقط
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    // قراءة البيانات المرسلة
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const { message, user } = body || {};
 
@@ -15,7 +13,6 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'GROQ_API_KEY is missing in Vercel settings.' });
     }
 
-    // إرسال الطلب لـ Groq API باستخدام الموديل المعتمد
     const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -23,7 +20,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama3-8b-8192',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           {
             role: 'system',
