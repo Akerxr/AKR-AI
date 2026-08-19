@@ -326,14 +326,12 @@
 
       userName = val;
 
-      // إخفاء كارت الإدخال وتجهيز الرسالة المخصصة
       document.getElementById('inputCard').style.display = 'none';
       const welcomeEl = document.getElementById('welcomeText');
       
       welcomeEl.innerHTML = `Ai version as special edition for ${userName}<br>All rights reserved for AKR`;
       welcomeEl.style.display = 'block';
 
-      // انتظار ثانيتين لإظهار الجلو والترحيب قبل الدخول للشات
       setTimeout(() => {
         startApp();
       }, 1800);
@@ -344,7 +342,6 @@
       const chat = document.getElementById('chat-container');
       const chatBox = document.getElementById('chat-box');
       
-      // وضع أول رسالة ترحيبية من الـ AI مخصصة بالاسم
       chatBox.innerHTML = `<div class="msg bot-msg">أهلاً بك يا ${userName}! نظام AKR AI جاهز وفي خدمتك. اؤمرني يا برو! ⚡</div>`;
 
       splash.style.opacity = '0';
@@ -366,18 +363,15 @@
 
       if (!text) return;
 
-      // إضافة رسالة المستخدم
       chatBox.innerHTML += `<div class="msg user-msg">${text}</div>`;
       input.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // رسالة انتظار
       const loadingId = 'loading-' + Date.now();
       chatBox.innerHTML += `<div class="msg bot-msg" id="${loadingId}">جاري التفكير... 🧠</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
 
       try {
-        // إرسال الطلب مع اسم المستخدم للسيرفر
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -393,12 +387,12 @@
         if (res.ok) {
           loadingEl.innerText = data.reply;
         } else {
-          loadingEl.innerText = "حصلت مشكلة ف الاتصال! تأكد من إعدادات Vercel API Key.";
+          loadingEl.innerText = "خطأ: " + (data.error || "مشكلة غير معروفة في السيرفر");
           loadingEl.style.borderColor = "red";
         }
       } catch (err) {
         const loadingEl = document.getElementById(loadingId);
-        if(loadingEl) loadingEl.innerText = "خطأ في الشبكة يا برو!";
+        if(loadingEl) loadingEl.innerText = "خطأ شبكة: " + err.message;
       }
 
       chatBox.scrollTop = chatBox.scrollHeight;
